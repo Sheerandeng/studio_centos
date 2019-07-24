@@ -169,14 +169,13 @@ void *internet(void *ptr)
 
     //串口配置
     int  fd = -1;
-    char command[1024] = "microcom -s 115200 /dev/ttyUSB2";
     char buf[32];
 
-    char *com_path = "/dev/ttyUSB0";
+    char *com_path = "/dev/ttyUSB2";
     comport *comport_info;
     comport_info = initComport();
     strncpy(comport_info->path,com_path,sizeof(comport_info->path));
-    struct termios new_term,old_term;
+    struct termios old_term;
 
 
     //使能可取消该线程
@@ -211,14 +210,15 @@ void *internet(void *ptr)
 
                 /* 打开串口 */
                 openComport(comport_info,&old_term);
-                writeComport(comport_info->com_fd,command,sizeof(command));
                 
                 while(1)
                 {
                     /* 发送AT+CPIN? */
                     memset(buf,0,sizeof(buf));
                     strcpy(buf,"AT+CPIN?\r");
-                    if( fd = (send_at_com( buf,sizeof(buf))) == 0 )
+                    printf("%s\n",buf);
+                    fd = send_at_com( buf,sizeof(buf));
+                    if( fd == 0 )
                     {
                         printf("发送[AT+CPIN?]成功！\n");
                     }
@@ -230,7 +230,8 @@ void *internet(void *ptr)
 
                     /* 读取AT+CPIN? */
                     memset(buf,0,sizeof(buf));
-                    if( fd= (get_at_cpin( buf,sizeof(buf))) == 0 )
+                    fd = get_at_cpin( buf,sizeof(buf));
+                    if( fd == 0 )
                     {
                         printf("Sim卡到位\n");
                     }
@@ -243,7 +244,8 @@ void *internet(void *ptr)
                     /* 发送AT+CREG? */
                     memset(buf,0,sizeof(buf));
                     strcpy(buf,"AT+CREG?\r");
-                    if( fd = (send_at_com( buf,sizeof(buf))) == 0 )
+                    fd = send_at_com( buf,sizeof(buf));
+                    if( fd == 0 )
                     {
                         printf("发送[AT+CREG?]成功！\n");
                     }
@@ -255,7 +257,8 @@ void *internet(void *ptr)
 
                     /* 读取AT+CREG? */
                     memset(buf,0,sizeof(buf));
-                    if( fd= (get_at_creg( buf,sizeof(buf))) == 0 )
+                    fd = get_at_creg( buf,sizeof(buf));
+                    if( fd == 0 )
                     {
                         printf("注册上网络\n");
                     }
@@ -268,7 +271,8 @@ void *internet(void *ptr)
                     /* 发送AT+CIMI */
                     memset(buf,0,sizeof(buf));
                     strcpy(buf,"AT+CIMI\r");
-                    if( fd = (send_at_com( buf,sizeof(buf))) == 0 )
+                    fd = send_at_com( buf,sizeof(buf));
+                    if( fd == 0 )
                     {
                         printf("发送[AT+CIMI]成功！\n");
                     }
@@ -280,11 +284,12 @@ void *internet(void *ptr)
 
                     /* 读取AT+CIMI */
                     memset(buf,0,sizeof(buf));
-                    if( fd= (get_at_cimi( buf,sizeof(buf))) == 0 )
+                    fd = get_at_cimi( buf,sizeof(buf));
+                    if( fd == 0 )
                     {
                         printf("运营商：中国移动\n");
                     }
-                    if( fd= (get_at_cimi( buf,sizeof(buf))) == 1 )
+                    if( fd == 1 )
                     {
                         printf("运营商：中国联通\n");
                     }
@@ -294,7 +299,8 @@ void *internet(void *ptr)
                     /* 发送AT+CSQ */
                     memset(buf,0,sizeof(buf));
                     strcpy(buf,"AT+CSQ\r");
-                    if( fd = (send_at_com( buf,sizeof(buf))) == 0 )
+                    fd = send_at_com( buf,sizeof(buf));
+                    if( fd == 0 )
                     {
                         printf("发送[AT+CSQ]成功！\n");
                     }
@@ -306,7 +312,8 @@ void *internet(void *ptr)
                 
                     /* 读取AT+CSQ */
                     memset(buf,0,sizeof(buf));
-                    if( fd= (get_at_csq( buf,sizeof(buf))) == 0 )
+                    fd = get_at_csq( buf,sizeof(buf));
+                    if( fd == 0 )
                     {
                         printf("信号强，可以上网\n"); 
                     }

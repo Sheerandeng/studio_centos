@@ -24,9 +24,11 @@
 int send_at_com( char *buf,int bufsize )
 {
     comport     *comport_s = NULL;
-    int         rv = -1;
+    int         fd = -1;
 
-    if( (rv = writeComport(comport_s->com_fd,buf,bufsize)) > 0 )
+    fd = writeComport(comport_s->com_fd,buf,bufsize);
+    
+    if( fd > 0 )
     {
         return 0;
     }
@@ -44,17 +46,15 @@ int send_at_com( char *buf,int bufsize )
 int get_at_cpin( char *buf,int bufsize )
 {
     comport     *comport_s = NULL;
-    int         rv = -1;
 
-    if( (rv = readComport(comport_s->com_fd,buf,bufsize)) > 0 )
+    readComport(comport_s->com_fd,buf,bufsize);
+    
+    if( (strstr(buf,"READY")) != NULL ) 
     {
-        if( (strstr(buf,"READY")) != NULL ) 
-        {
-            return 0;
-        }
-        else
-            return -1;
+        return 0;
     }
+    else
+        return -1;
 }
     
 /****************************** 
@@ -67,17 +67,15 @@ int get_at_cpin( char *buf,int bufsize )
 int get_at_creg( char *buf,int bufsize )
 {
     comport     *comport_s = NULL;
-    int         rv = -1;
 
-    if( (rv = readComport(comport_s->com_fd,buf,bufsize)) > 0 )
+    readComport(comport_s->com_fd,buf,bufsize);
+    
+    if( buf[9] == 0x31 )
     {
-        if( buf[9] == 0x31 )
-        {
-            return 0;
-        }
-        else 
-            return -1;
+        return 0;
     }
+    else 
+        return -1;
 }
 
 /******************************
@@ -91,21 +89,19 @@ int get_at_creg( char *buf,int bufsize )
 int get_at_cimi( char *buf,int bufsize )
 {
     comport     *comport_s = NULL;
-    int         rv = -1;
 
-    if( (rv = readComport(comport_s->com_fd,buf,bufsize)) > 0 )
+    readComport(comport_s->com_fd,buf,bufsize);
+    
+    if( buf[4] == 0x30 )
     {
-        if( buf[4] == 0x30 )
-        {
-            return 0;
-        }
-        else if( buf[4] == 0x31 )
-        {
-            return 1;
-        }
-        else 
-            return -1;
+        return 0;
     }
+    else if( buf[4] == 0x31 )
+    {
+        return 1;
+    }
+    else 
+        return -1;
 }
  
 /******************************
@@ -118,17 +114,15 @@ int get_at_cimi( char *buf,int bufsize )
 int get_at_csq( char *buf,int bufsize )
 {
     comport     *comport_s = NULL;
-    int         rv = -1;
-
-     if( (rv = readComport(comport_s->com_fd,buf,bufsize)) > 0 )
-     {
-        if ( buf[6] >= 1 )
-        {
-            return 0;
-        }
-        else
-            return -1;
-     }
+    
+    readComport(comport_s->com_fd,buf,bufsize);
+    
+    if ( buf[6] >= 1 )
+    {
+        return 0;
+    }
+    else
+        return -1;    
 }
 
 
