@@ -10,10 +10,11 @@
  *      ChangeLog:  1, Release initial version on "24/07/19 17:22:16"
  *                 
  ********************************************************************************/
+#include "comport.h"
 
-int send_at_com( char *buf,int bufsize );
-int get_at_cpin( char *buf,int bufsize );
-int get_at_creg( char *buf,int bufsize );
-int get_at_cimi( char *buf,int bufsize );
-int get_at_csq( char *buf,int bufsize );
+int send_at_com( comport *comport_s,char *buf,int bufsize );
+int get_at_cpin( comport *comport_s,char *buf,int bufsize );
+int get_at_creg( comport *comport_s,char *buf,int bufsize );
+int get_at_cimi( comport *comport_s,char *buf,int bufsize );
+int get_at_csq( comport *comport_s,char *buf,int bufsize );
 
