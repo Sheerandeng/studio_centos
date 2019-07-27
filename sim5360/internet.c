@@ -327,8 +327,9 @@ void *internet(void *ptr)
                 else
                 {
                     printf("信号弱，不能可以上网\n");
+
                 }
-                
+
                 /* 关闭串口 */
                 fd = closeComport(comport_info,&old_term);
                 if( fd == 0 )
@@ -338,10 +339,11 @@ void *internet(void *ptr)
                 else
                     printf("Close comport failure!\n");
 
-                
-                printf("正在上网，等待2秒\n");
-                sleep(2);
-                printf("上网成功！\n");
+                /* 上网操作 */
+                system("pppd call wcdma&");
+                system("ifconfig");
+                system("route add default dev ppp0");
+                system("ping baidu.com");
 
                 pthread_mutex_lock(&temp_pctr->lock);//上锁
                 temp_pctr->req = 0;
